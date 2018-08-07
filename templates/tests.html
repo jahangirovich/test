@@ -1,0 +1,280 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        .questions{
+            text-align: left;
+            width: 55%;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        ul li{
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #dae1e8;
+            padding: 10px;
+
+        }
+    ul li span{
+        font-size: 16px;
+        padding: 10px 10px;
+        cursor: pointer;
+        margin: 20px;
+        background-color: #eff1f4;
+
+        font-weight: normal;
+    }
+    #what{
+    }
+    .h{
+        border:none;
+        padding: 10px;
+        outline: none;
+        background-color: #eff1f4;
+    }
+    #hr{
+        display: none;
+    }
+    .btn button{
+        display: none;
+    }
+    ul li label{
+        font-size: 17px;
+        font-weight: normal;
+    }
+    .alls ul li{
+        list-style-type: lower-alpha;
+
+    }
+    .ul li{
+        border:none;
+    }
+    .btn{
+        padding: 10px;
+    }
+    .btn button{
+        font-size: 13px;
+        border:none;
+        cursor: pointer;
+        padding: 10px;
+    }
+    .style{
+        background:none;
+        color:green;
+        cursor: default;
+        display: none;
+    }
+    .what{
+        padding: 10px;background:none;
+    }
+    .href{
+        display: none;
+    }
+    .timer #hour{
+        font-weight: bold;
+        font-size: 30px;
+    }
+    </style>
+    {% if question.count > 0 %}
+    <div class="questions" id="main">
+            <div id="timer">
+                <span id="hour">2:</span>
+                <span id="minute">59:</span>
+                <span id="second">60</span>
+            </div>
+        <p id = "rezult">
+        <ul id="best">
+                {% for quest in question %}
+                    <li type="1">
+                        {{ quest.content }}
+                        <span class="style" id="style{{ quest.id }}">вы уже ответили*</span>
+                        <span onclick="postIt({{ quest.id }})" id="a{{ quest.id }}" class="h">Открыть</span>
+                        <span style="display: none" id="id">{{ quest.id }}</span>
+                    </li>
+                    <div class="alls">
+                        <ul  id="s{{ quest.id }}" class="ul">
+
+                        </ul>
+                    </div>
+                    <div class="btn">
+                        <button onclick="submitIt({{ quest.id }})" id="m{{ quest.id }}">Ответить</button>
+                        <span id="mon{{ quest.id }}" style="display: none">{{ quest.content }}</span>
+                    </div>
+                {% endfor %}
+            <p style="display: none" class="hi">{{ i }}</p>
+            <p class="right"></p>
+        </ul>
+        <button class="what" onclick="whatIsUp({{ user }},{{ i }})" id="mains">Завершить тестирование</button>
+            <p style="" id="use">{{ use }}</p>
+            <p id="quiz" style="">{{ quiz }}</p>
+            <p id="come" style="">{{ question.count }}</p>
+    </div>
+        {% else %}
+            <p style="text-align: center;margin: 0 auto">Простите но вопросов пока что нету</p>
+    {% endif %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+
+        var len = [];
+        var come = [];
+        var correct = [];
+        var notright = [];
+        var name2 = "";
+        var nup = 0;
+        var name = "";
+        var what = [];
+        var hei = $('#quiz').text();
+        var use = $('#use').text();
+        var size = 0;
+        var quiz = $(`.hi`).text();
+        var notcorrect = [];
+        var questionses = [];
+        function postIt(id) {
+            $.get('http://localhost:8000/router/answer/', function (data) {
+                len = data;
+                for (var x = 0; x < data.length; x++) {
+                    if (id == data[x].question) {
+                        $(`#s${id}`).append(` <li> <input class="joha" type='radio' name='main' id='${data[x].id}' value='${data[x].content}'><label for="${data[x].id}" name="what">${data[x].content}</label></li>`)
+                    }
+                }
+            });
+            document.getElementById(`a${id}`).style.display = "none";
+            document.getElementById(`m${id}`).style.display = "block";
+        }
+        function submitIt(id) {
+            var questions = 0
+            var nope = $(`#mon${id}`).text();
+            for(var x = 0;x < len.length;x++){
+                if(id == len[x].question){
+                    if($(`#${len[x].id}`).is(":checked")){
+                        name = len[x].content;
+                        questions = len[x].q
+                    }
+                    if(len[x].correct){
+                        name2 = len[x].content
+                    }
+                }
+            }
+            if (name == ''){
+                alert('Вы не ответили')
+            }
+            else{
+                 come.push(name);
+                 $(`#s${id}`).hide();
+                 $(`#style${id}`).show();
+                 $(`#m${id}`).hide();
+                 if(name == name2){
+                     what.push(name2);
+                     notright.push(name2);
+                     questionses.push(questions);
+                 }
+                 else{
+                    what.push(name2);
+                    notright.push(name);
+                    questionses.push(questions)
+                 }
+            }
+        }
+        function whatIsUp(user,quiz){
+            var all = [];
+            var my = $(`#come`).text();
+            var take1 = [];
+            var take2 = [];
+            var questions = [];
+            if (name == ''){
+                alert('Заполните')
+            }
+            else{
+                $.get(`http://localhost:8000/router/answer/`,function (data) {
+                    for (var x = 0;x < data.length;x++){
+                        if(data[x].correct){
+                            correct.push(data[x].content);
+                        }
+                        else if(!data[x].correct){
+                            notcorrect.push(data[x].content)
+                        }
+                        if(!$(`#${data[x].id}`).is(":checked")){
+
+                        }
+                        else if($(`#${data[x].id}`).is(":checked")){
+                            size++;
+                        }
+                    }
+                    for (var x = 0;x < correct.length;x++){
+                        for (var y = 0;y < come.length;y++){
+                            if(correct[x] == come[y]){
+                                take1.push(come[y])
+                            }
+                        }
+                    }
+                    console.log(quiz);
+                    console.log(hei);
+                    var hope = my - take1.length;
+                    $.post('http://localhost:8000/router/response/',{
+                        answer:take1.length,
+                        user:user,
+                        quiz:quiz,
+                        username:use,
+                        quizes:`${hei}`,
+                        notright:hope
+                    },function (data) {
+                        nup = data.id
+                    })
+                        .catch(
+                            err =>{
+                                console.log(err)
+                            }
+                        )
+                        .done(
+                            response =>{
+                                for (var x = 0;x < what.length;x++){
+                                    $.post(`http://localhost:8000/router/test/`,{
+                                        right:what[x],
+                                        false:notright[x],
+                                        question:questionses[x],
+                                        response:nup
+                                    })
+                                        .catch(
+                                            err =>{
+                                                console.log(err)
+                                            }
+                                        )
+                                }
+                                document.location.href = "/main/answers/"
+                            }
+                        )
+                });
+                alert('Сделано');
+            }
+        }
+
+        window.onunload = function()
+        {
+            return confirm("Вы точно хотите завершить тест?")
+        };
+        window.onbeforeunload = function(){
+            return confirm('Точно хотите выйти?');
+        };
+       var hour2 = 2;
+       var minute2 = 59;
+       var second2 = 60;
+        setInterval(function () {
+            second2--
+            $("#second").text(`${second2}`)
+            if(second2 == 0){
+                second2 = 59
+                minute2--;
+            }
+            $("#minute").text(`${minute2}:`)
+            if(minute2 == 0){
+                hour2--;
+                minute2 = 59;
+                $("#hour").text(`${hour2}:`)
+            }
+            if(hour2 == -1){
+                document.getElementById('best').style.display = "none";
+                  document.getElementById('timer').style.display = "none";
+            }
+        },1000);
+    </script>
+{% endblock %}

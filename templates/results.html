@@ -1,0 +1,64 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        .response{
+            width: 50%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .into ul{
+            margin: 0 auto;
+        }
+        .into{
+            padding: 20px;
+        }
+        .into ul li{
+            padding: 10px;
+            border-bottom: 1px solid lightgray;
+        }
+    ul li .me{
+        padding: 10px;
+        border-right: 1px solid lightgray;
+    }
+    .mes{
+        padding: 0px 20px;
+    }
+    table th,td{
+        padding: 10px;
+    }
+    table{
+        border:1px solid lightgray;
+    }
+    table th{
+        border-bottom: 1px solid lightgray;
+    }
+    td{
+        color:green;
+    }
+    </style>
+    <div class="response">
+        <div class="into">
+            <table>
+                <tr>
+                    <th>Правильные ответы</th>
+                    <th>ИИН</th>
+                    <th>Тестируемый</th>
+                    <th>Дата</th>
+                    <th>Вариант</th>
+                    <th>Тест</th>
+                </tr>
+                    {% for result in results %}
+                        <tr>
+                            <td>{{ result.answer }}</td>
+                            <td>{{ result.username }}</td>
+                            <td>{{ result.user.first_name }}</td>
+                            <td>{{ result.date }}</td>
+                            <td>{{ result.quizes }}</td>
+                            <td>{{ result.quiz.quiz.title }}</td>
+                        </tr>
+                    {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        .admin{
+            margin: 0 auto;
+            width: 50%;
+            text-align: center;
+            padding: 20px;
+        }
+    ul{
+        margin: 0 auto;
+        position: relative;
+    }
+    ul li{
+        padding: 10px;
+        position: relative;
+        cursor: pointer;
+        border-bottom: 1px solid lightgray;
+    }
+    .left{
+        width: 100%;
+        position: relative;
+    }
+    .manage{
+        position: absolute;
+        top:10px;
+        right: 10px;
+    }
+    .manage span{
+        padding: 0px 10px;
+        cursor: pointer;
+    }
+    .create{
+        padding: 10px;
+    }
+    .errorlist{
+        display: none;
+    }
+    .words{
+        padding: 4px;
+    }
+    .admin .create input[type=text],input[type=number]{
+        width: 40%;
+        padding: 5px;
+    }
+    input[type=submit]{
+        padding: 10px;
+    }
+    h2{
+        text-align: center;
+        color:red;
+        margin: 0 auto;
+    }
+    </style>
+    {% if request.user.is_superuser %}
+        <div class="admin">
+        {% block me %}
+        <h2 style="text-align: center;color:black">Создайте тест</h2>
+            <div class="left">
+
+                <ul>
+                    {% for q in quiz %}
+                        <li type="1">
+                            <a href="{% url 'variant' q.id %}">
+                                <div class="words">
+                                    {{ q.title }}
+                                </div>
+                             </a>
+                                <div class="manage">
+                                    <span style="color:red" onclick="deleteIt({{ q.id }})">Удалить</span>
+                                </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="create">
+                    <h4>Создайте Тест</h4>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit">
+                    </form>
+                </div>
+            </div>
+        {% endblock %}
+        </div>
+        {% else %}
+        <h2>Простите но этa страница для администратора</h2>
+    {% endif %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+    function deleteIt(id) {
+        $.ajax({
+            url: `http://localhost:8000/router/quiz/${id}/`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload(true)
+            }
+        });
+    }
+    </script>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .errorlist{
+            display: none;
+        }
+        body{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login</h1>
+    {% if request.user.is_authenticated %}
+        <p>Простите но вы уже вошли</p>
+        <a href="/main/">Перейдите по этой ссылке чтобы здать экзамен</a>
+        {% else %}
+                <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% for message in messages %}
+                    <p style="color:red">{{ message }}</p>
+                {% endfor %}
+                <input type="submit" value="войти">
+                <p><a href="/">Создать аккаунт?</a></p>
+            </form>
+    {% endif %}
+    <script>
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        .search{
+            width: 70%;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            left:10%
+        }
+    h3{
+        margin: 0 auto;
+    }
+    form{
+        text-align: left;
+        padding: 10px;
+    }
+    form input[type=submit]{
+        padding: 5px;
+    }
+
+    .top ul li{
+        list-style-type: none;
+        display: inline-block;
+        padding: 5px 20px;
+        width: 110px;
+        font-weight: bold;
+    }
+    .list{
+        border: 1px solid lightgray;
+    }
+    .top ul{
+        border-bottom: 1px solid gray;
+    }
+    .bottom ul li{
+        list-style-type: none;
+        display: inline-block;
+        padding: 5px 20px;
+        width: 110px;
+        color:black;
+    }
+    .bottom ul{
+        border-bottom: 1px solid lightgray;
+        margin: 0 auto;
+        padding: 0 ;
+    }
+    .bottom ul a{
+        padding: 10px;
+        display: block;
+        border-top:1px solid lightgray;
+    }
+    .magic{
+        width: 100%;
+        overflow-y:scroll;
+    }
+    </style>
+    <div class="search">
+        {% if request.user.is_superuser %}
+            <h3>Поиск результатов</h3>
+            <form action="" method="get">
+                <label for="iin">Введите ИИН:</label>
+                <input type="search" id="iin" name="q" value="{{ request.get.q }}">
+                <input type="submit" value="Поиск">
+            </form>
+            <div class="list">
+                {% block query %}
+                <div class="top">
+                    <ul>
+                        <li>Правильные ответы</li>
+                        <li>Дата</li>
+                        <li>Тестируемый</li>
+                        <li>ИИН</li>
+                        <li>Неправильные ответы</li>
+                        <li>Вариант</li>
+                        <li>Тест</li>
+                        <li>Набрал ли проходной?</li>
+                    </ul>
+                </div>
+                <div class="bottom">
+                    <ul type="1">
+                        {% for query in queryset %}
+                            <li type="1">{{ query.answer }}</li>
+                            <li>{{ query.date }}</li>
+                            <li>{{ query.user.first_name }}</li>
+                            <li>{{ query.user.username }}</li>
+                            <li>{{ query.notright }}</li>
+                            <li>{{ query.quizes }}</li>
+                            <li>
+                                <div class="magic">
+                                    {{ query.quiz.quiz.title }}
+                                </div>
+                            </li>
+                            <li>{% if  query.quiz.quiz.points <= query.answer %}
+                                    <span>Да</span>
+                                {% else %}
+                                    <span>Нет</span>
+                                {% endif %}
+                            </li>
+                            <a href="{% url 'list' query.id %}">Посмотреть развернутом виде</a>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endblock %}
+            </div>
+            {% block hei %}
+                {% endblock %}
+            {% else %}
+                <h2 style="margin: 0 auto">Простите но эта страница для администратора</h2>
+        {% endif %}
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+
+
+    </script>
+{% endblock %}

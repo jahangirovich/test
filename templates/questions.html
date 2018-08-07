@@ -1,0 +1,82 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        .questions{
+            width: 50%;
+            margin: 0 auto;
+            padding: 10px;
+            text-align: center;
+        }
+        ul{
+            margin: 0 auto;
+        }
+        ul li{
+            padding: 10px;
+            border:none;
+            text-align: center;
+            border-bottom: 1px solid lightgray;
+
+        }
+    .errorlist{
+        display: none;
+    }
+    .tool{
+        padding: 10px;
+        cursor: pointer;
+        position: relative;
+        width: 10%;
+        display: inline-block;
+    }
+    .words{
+        width: 75%;
+        display: inline-block;
+    }
+    .list{
+
+    }
+    </style>
+    {% if request.user.is_superuser %}
+    <div class="questions">
+        <h3>Создайте вопросы для Варианта:{{ quiz }}</h3>
+        <div class="list">
+            <ul>
+                {% for question in questions %}
+                <li type="1" id="hei">
+                    <a href="{% url 'answer' question.id %}">
+                        <div class="words">
+                            {{ question.content }}
+                        </div>
+                    </a>
+                        <div class="tool">
+                            <span style="color:red;" onclick="removeIt({{ question.id }})">Удалить</span>
+                        </div>
+                    <span id="me" style="display: none">{{ pk }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="add">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Добавить вопрос">
+            </form>
+        </div>
+        <a href="/main/administration/" style="padding: 10px ;display: block;margin: 20px">Вернуться назад</a>
+    </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script>
+            function removeIt(id) {
+                $.ajax({
+                url: `http://localhost:8000/router/question/${id}/`,
+                type: 'DELETE',
+                    success: function(result) {
+                        location.reload(true)
+                    }
+                });
+            }
+
+        </script>
+    {% endif %}
+{% endblock %}

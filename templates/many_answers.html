@@ -1,0 +1,92 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+        .answers{
+            width: 50%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        input[type=text],input[type=number]{
+            width: 40%;
+            padding: 5px;
+        }
+        input[type=checkbox]{
+
+        }
+    .words{
+        width: 80%;
+        display: inline-block;
+    }
+    .tool{
+        width: 10%;
+        display: inline-block;
+    }
+    ul{
+        margin: 0 auto;
+    }
+    h3,p{
+        margin: 0 auto;
+        padding: 10px;
+    }
+    ul li{
+        padding: 10px;
+        border-bottom: 1px solid lightgray;
+    }
+    .class{
+        border-bottom:1px solid gray;
+    }
+    .tool span{
+        cursor: pointer;
+    }
+    .bottom{
+        padding: 10px;
+    }
+    </style>
+    <div class="answers">
+        <h3>Ответы на вопросы:{{ question }}</h3>
+        <p class="class">Здесь вы можете добавлять ответы на вопросы </p>
+        <div class="all">
+            <div class="top">
+                <ul>
+                    {% for answer in answers %}
+                        <li type="1">
+                            <div class="words">
+                                <span style="font-weight: bold">{{ answer.content }}</span>
+                                {% if answer.correct %}
+                                    <span style="color:green">Правильный ответ</span>
+                                    {% else %}
+                                    <span style="color:red">Неправильный ответ</span>
+                                {% endif %}
+                            </div>
+                            <div class="tool">
+                                <span style="color:red;" onclick="deleteIt({{ answer.id }})">Удалить</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="bottom">
+                <h4>Добавьте ответ</h4>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit">
+                </form>
+            </div>
+            <a href="/main/administration/">Вернуться назад</a>
+        </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+    function deleteIt(id) {
+        $.ajax({
+            url: `http://localhost:8000/router/answer/${id}/`,
+            type: 'DELETE',
+            success: function(result) {
+                location.reload(true)
+            }
+        });
+    }
+    </script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'administration.html' %}
+
+{% block me %}
+    <style>
+        form{
+            padding: 20px;
+        }
+    ul li{
+        list-style-type: none;
+    }
+    .left{
+        width: 80%;
+        display: inline-block;
+    }
+
+    .right{
+        width: 10%;
+        display: inline-block;
+    }
+    .right span{
+        color:red;
+        cursor: pointer;
+    }
+    </style>
+    <div class="variant">
+        <h3>Выберите варианты</h3>
+        <ul>
+            {% for variant in variants %}
+                <div class="left">
+                    <a href="{% url 'question' variant.id %}">
+                        <li>
+                            <span>Вариант:{{ variant.number }}</span>
+                        </li>
+                    </a>
+                </div>
+                <div class="right">
+                    <span>удалить</span>
+                </div>
+            {% endfor %}
+        </ul>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit">
+        </form>
+    </div>
+{% endblock %}

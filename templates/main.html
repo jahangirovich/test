@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .head{
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #eff1f4;
+            color:#565454;
+            display: flex;
+        }
+        body{
+            margin: 0 auto;
+        }
+        .detail{
+            background-color: #dae1e8;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .detail a{
+            color:#515559;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .center{
+            position: relative;
+            text-align: right;
+        }
+        .leftside{
+            display: inline-block;
+            width: 20%;
+            position: fixed;
+            left:0;
+            border-right: 5px solid #dae1e8;
+            height: 100%;
+        }
+        .leftside a{
+            display: block;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border:2px solid #b1b3b5;
+            color:#515559;
+            text-align: left;
+            text-decoration: none;
+        }
+        .leftside a:hover{
+            background-color: #e3eaf2;
+        }
+        .rightside{
+            width: 75%;
+            display: inline-block;
+            padding: 20px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .name{
+            width: 40%;
+            margin: 0 100px;
+            text-align: center;
+             box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        input[type=search]{
+          padding: 5px 10px;
+        }
+        .first_column{
+            background-color: #ededed;
+            color:#333;
+        }
+        .name .first_column span{
+            display: inline-block;
+            padding: 10px;
+        }
+        .second_column{
+            padding: 10px 10px 0 10px;
+            text-align: center;
+            border-bottom: 1px solid #e3eaf2;
+        }
+        a{
+            text-decoration: none;
+        }
+        .second_column a{
+            color:#4d5359;
+            padding: 10px;
+            cursor: pointer;
+            display: block;
+            border-bottom: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body>
+    <div class="all">
+        <div class="tests">
+            <div class="head">
+                <span style="font-size: 26px;width: 20%">Тесты и экзамены</span>
+                <div style="text-align: right;display: inline-block;width: 100%">
+                    <span class="right">Тестируемый:{{ request.user.first_name }}  [<a href="/logout">Выйти</a>]</span>
+                </div>
+            </div>
+            <div class="detail">
+                <a href="/main/results/" style="border-right: 2px solid gray">Результаты моих тестов</a>
+            </div>
+            <div class="center">
+                <div class="leftside">
+                    <a href="/main/">Тесты и экзамены</a>
+                    <a href="/main/administration">Администрация</a>
+                    <a href="/main/search">Поиск результатов(admin)</a>
+                </div>
+            {% block content %}
+                <div class="rightside">
+                    {% block me %}
+                    <p style="font-size: 26px;font-weight: bold;color:#53595e">Выберите тест</p>
+                    {% endblock %}
+                    <div class="into">
+                        <div class="name">
+                            <div class="first_column">
+                                {% block name %}
+                                    <span>Наименование</span>
+                                {% endblock %}
+                            </div>
+                            <div class="second_column">
+                            {% block test %}
+                                {% for query in queryset %}
+                                    <a href="{% url 'choose' query.id %}">{{ query.title }}</a>
+                                {% endfor %}
+                            {% endblock %}
+                            </div>
+                            <div class="admin">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+    function clicked(click) {
+         var he =confirm('Вы точно хотите пройти тест?');
+         if(he){
+             document.location.href = (`${click}`)
+         }
+         else{
+             document.location.href = '/main/'
+         }
+    }
+</script>
+</body>
+</html>

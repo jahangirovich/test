@@ -1,0 +1,115 @@
+{% extends 'search.html' %}
+
+{% block query %}
+    <style>
+        li{
+            text-align: center;
+            position: relative;
+        }
+    .magic{
+        overflow-x:scroll;
+    }
+    .big th{
+        padding: 10px;
+    }
+    .big td{
+        padding: 10px;
+    }
+    </style>
+    <div>
+        <table class="big">
+            <tr>
+                <th>
+                    Правильные вопросы
+                </th>
+                <th>
+                    Дата
+                </th>
+                <th>
+                    Тестируемый
+                </th>
+                <th>
+                    ИИН
+                </th>
+                <th>
+                    Неправильные ответы
+                </th>
+                <th>
+                    Вариант
+                </th>
+                <th>
+                    Тест
+                </th>
+                <th>
+                    Набрал ли проходной
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ on.answer }}
+                </td>
+            <td>
+                    {{ on.date }}
+                </td>
+            <td>
+                    {{ on.user.first_name }}
+                </td>
+            <td>
+                 {{ on.user.username }}
+                </td>
+            <td>
+                    {{ on.notright }}
+                </td>
+            <td>
+                    {{ on.quizes }}
+                </td>
+            <td>
+                    {{ on.quiz.quiz.title }}
+                </td>
+                <td>
+                    {% if on.quiz.quiz.points <= on.answer %}
+                     <span>Да</span>
+                        {% else %}
+                            <span>Нет</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
+{% block hei %}
+    <style>
+        table{
+            width: 100%;
+        }
+        table td{
+            padding: 10px;
+            border:1px solid lightgray;
+        }
+        .who{
+            border: 1px solid gray;
+            font-weight: bold;
+        }
+    </style>
+    <div class="response">
+        <table border="0.5">
+               <tr >
+                    <td class="who">Вопросы</td>
+                    <td class="who">Неправильные ответы</td>
+                    <td class="who">Правильные ответы</td>
+                </tr>
+            {% for me in queryset %}
+                <tr class="on">
+                    <td>{% if me.question == '0' %}
+                        <span style="color:red">Не отвечено</span>
+                        {% else %}
+                        <span>{{ me.question }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ me.false }}</td>
+                    <td>{{ me.right }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

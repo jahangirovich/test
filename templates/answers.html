@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <style>
+    .answers{
+            text-align: center;
+            width: 55%;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        ul li{
+            padding: 20px;
+            border-bottom:1px solid lightgray;
+            list-style-type: none;
+        }
+    </style>
+    <div class="answers">
+        <div class="main">
+            <ul class="mains">
+
+            </ul>
+            <p>
+                <a href="/main/results/">Перейти на результаты моих тестов</a>
+            </p>
+        </div>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        var x;
+        $.get(`http://localhost:8000/router/response/`,function (data) {
+            $('.mains').append(`<li>Правильные ответы:${data[data.length-1].answer}</li><li>Дата сдачи экзамена:${data[data.length-1].date}</li>
+                <li>ИИН тестируемого:${data[data.length-1].username}</li><li>Вариант:${data[data.length-1].quizes}</li>
+
+                `)
+        });
+
+    </script>
+{% endblock %}

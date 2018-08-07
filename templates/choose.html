@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+{% block me %}
+    <p style="font-size: 26px;font-weight: bold;color:#53595e">Выберите Вариант</p>
+{% endblock %}
+{% block test %}
+    {% for query in variants %}
+        <a onclick="clicked(`{% url 'detail' query.id %}`)">{{ query.number }}</a>
+    {% endfor %}
+{% endblock %}
+{% block name %}
+    <span>Варианты</span>
+{% endblock %}
